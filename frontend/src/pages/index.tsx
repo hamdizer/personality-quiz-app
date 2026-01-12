@@ -166,8 +166,8 @@ export default function Home() {
             sx={{
               mt: 8,
               display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gridTemplateRows: "repeat(2, 1fr)",
+              gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" },
+              gridTemplateRows: { xs: "repeat(4, 1fr)", sm: "repeat(2, 1fr)" },
             }}
           >
             {features.map((feature, index) => (
@@ -227,8 +227,11 @@ export default function Home() {
               spacing={3}
               sx={{
                 display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gridTemplateRows: "repeat(2, 1fr)",
+                gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" },
+                gridTemplateRows: {
+                  xs: "repeat(4, 1fr)",
+                  sm: "repeat(2, 1fr)",
+                },
               }}
             >
               {personalityTypes.map((type, index) => (
