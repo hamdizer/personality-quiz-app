@@ -1,0 +1,38 @@
+# frontend/docker-compose.dev.yml
+
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: quiz-frontend-dev
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:5000}
+      NODE_ENV: development
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    networks:
+      - frontend-dev-network
+    volumes:
+      - ./pages:/app/pages
+      - ./components:/app/components
+      - ./styles:/app/styles
+      - ./types:/app/types
+      - ./utils:/app/utils
+      - ./public:/app/public
+      - ./package.json:/app/package.json
+      - ./next.config.ts:/app/next.config.ts
+      - ./tsconfig.json:/app/tsconfig.json
+      # Prevent overwriting
+      - /app/node_modules
+      - /app/.next
+    stdin_open: true
+    tty: true
+    command: npm run dev
+
+networks:
+  frontend-dev-network:
+    driver: bridge

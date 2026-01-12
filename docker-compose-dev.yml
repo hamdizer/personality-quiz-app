@@ -1,0 +1,81 @@
+# docker-compose.dev.yml
+
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: quiz-db-dev
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-personality_quiz}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    networks:
+      - quiz-network-dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: backend-development
+    container_name: quiz-backend-dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-personality_quiz}?schema=public
+      PORT: ${BACKEND_PORT:-5000}
+      NODE_ENV: development
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      LOG_LEVEL: debug
+    ports:
+      - "${BACKEND_PORT:-5000}:5000"
+      - "9229:9229"
+    networks:
+      - quiz-network-dev
+    volumes:
+      - ./backend/src:/app/src:ro
+      - ./backend/prisma:/app/prisma:ro
+      - /app/node_modules
+      - /app/dist
+    stdin_open: true
+    tty: true
+    command: npm run start:dev
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: frontend-development
+    container_name: quiz-frontend-dev
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:5000}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    networks:
+      - quiz-network-dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev
+
+networks:
+  quiz-network-dev:
+    driver: bridge
+
+volumes:
+  postgres_data_dev:
+    driver: local

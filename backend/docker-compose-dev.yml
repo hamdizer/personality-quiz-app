@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: quiz-backend-db-dev
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-personality_quiz}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    networks:
+      - backend-dev-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-postgres}']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: quiz-backend-dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-personality_quiz}?schema=public
+      PORT: ${BACKEND_PORT:-5000}
+      NODE_ENV: development
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      LOG_LEVEL: debug
+    ports:
+      - '${BACKEND_PORT:-5000}:5000'
+      - '9229:9229'
+    networks:
+      - backend-dev-network
+    volumes:
+      # Mount source for hot reload
+      - ./src:/app/src:ro
+      - ./prisma:/app/prisma:ro
+      - ./package.json:/app/package.json:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
+      - ./nest-cli.json:/app/nest-cli.json:ro
+      - /app/node_modules
+      - /app/dist
+      - ./logs:/app/logs
+    stdin_open: true
+    tty: true
+    command: npm run start:dev
+
+  prisma-studio:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: quiz-prisma-studio
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-personality_quiz}?schema=public
+    ports:
+      - '5555:5555'
+    networks:
+      - backend-dev-network
+    volumes:
+      - ./prisma:/app/prisma:ro
+    command: npx prisma studio --port 5555 --hostname 0.0.0.0
+
+networks:
+  backend-dev-network:
+    driver: bridge
+
+volumes:
+  postgres_data_dev:
+    driver: local

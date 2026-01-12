@@ -1,0 +1,39 @@
+# ================================
+# Backend Development Dockerfile
+# ================================
+
+# Use lightweight Node.js Alpine image
+FROM node:18-alpine AS development
+
+# Install Alpine dependencies needed for Prisma & dev tools
+RUN apk add --no-cache bash libc6-compat curl git
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev)
+RUN npm install --force
+
+# Copy source code
+COPY . .
+
+# Copy Prisma schema and generate Prisma client for Alpine
+COPY prisma ./prisma
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+RUN npx prisma generate
+# Build Next.js (skip TS errors)
+
+RUN npm run build 
+# Expose development port
+EXPOSE 5000
+
+# Optional health check
+HEALTHCHECK --interval=30s --timeout=3s \
+    CMD curl -f http://localhost:5000/health || exit 1
+
+# Start NestJS in development mode with hot reload
+CMD ["npm", "run", "start:dev"]

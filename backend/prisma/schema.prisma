@@ -1,0 +1,69 @@
+// prisma/schema.prisma
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Personality {
+    id          Int       @id @default(autoincrement())
+    pubkey      String    @unique
+    name        String    @unique
+    description String
+    color       String
+    createdAt   DateTime? @default(now())
+    updatedAt   DateTime? @updatedAt
+    deletedAt   DateTime? @db.Timestamp()
+
+    @@map("personalities")
+}
+
+model Question {
+    id     Int    @id @default(autoincrement())
+    pubkey String @unique
+    text   String
+    weight Int
+    order  Int
+
+    options   Option[]
+    createdAt DateTime? @default(now())
+    updatedAt DateTime? @updatedAt
+    deletedAt DateTime? @db.Timestamp()
+
+    @@map("questions")
+}
+
+model Option {
+    id         Int    @id @default(autoincrement())
+    pubkey     String @unique
+    questionId Int
+    text       String
+    order      Int
+
+    question  Question            @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    scores    OptionPersonality[]
+    createdAt DateTime?           @default(now())
+    updatedAt DateTime?           @updatedAt
+    deletedAt DateTime?           @db.Timestamp()
+
+    @@map("options")
+}
+
+model OptionPersonality {
+    id            Int    @id @default(autoincrement())
+    pubkey        String @unique
+    optionId      Int
+    personalityId Int
+    points        Int
+
+    option    Option    @relation(fields: [optionId], references: [id], onDelete: Cascade)
+    createdAt DateTime? @default(now())
+    updatedAt DateTime? @updatedAt
+    deletedAt DateTime? @db.Timestamp()
+
+    @@unique([optionId, personalityId])
+    @@map("option_personalities")
+}
