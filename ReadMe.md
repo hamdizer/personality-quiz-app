@@ -100,7 +100,7 @@ The Personality Quiz application allows users to discover their personality type
 
 ## 📁 Project Structure
 
-```
+````
 personality-quiz-app/                  # Root folder
 ├── backend/                           # NestJS backend application
 │   ├── src/
@@ -250,7 +250,7 @@ docker-compose exec backend npx prisma db seed
 # Frontend: http://localhost:3000
 # Backend: http://localhost:5000
 # Database: localhost:5432
-```
+````
 
 ### Using Make (Alternative)
 
@@ -1018,8 +1018,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Quick Links
 
-- [Frontend](https://personality-app-2zna.vercel.app) - User interface
-- [Backend API](https://personality-app-l1r0.onrender.com) - REST API
+- [Frontend](https://personality-quiz-app-kappa.vercel.app) - User interface
+- [Backend API](https://personality-quiz-app-mtye.onrender.com) - REST API
 - [Prisma Studio](http://localhost:5555) - Database GUI
 - [pgAdmin](http://localhost:5050) - Database management
 - [API Documentation](http://localhost:5000/api) - Swagger docs (if configured)

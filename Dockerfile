@@ -90,6 +90,6 @@ RUN chown -R nextjs:nodejs /app
 USER nextjs
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-    CMD curl -f https://frontend-1lpt-24rarchmm-hamdi-zeramdinis-projects.vercel.app/ || exit 1
+    CMD curl -f https://personality-quiz-app-kappa.vercel.app/ || exit 1
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["npm", "start"]

@@ -380,7 +380,7 @@ Uses MUI breakpoints:
 2. **Environment Variables**
 
 ```
-   NEXT_PUBLIC_API_URL=https://personality-app-y03w.onrender.com
+   NEXT_PUBLIC_API_URL=https://personality-quiz-app-mtye.onrender.com
 ```
 
 ### Docker
