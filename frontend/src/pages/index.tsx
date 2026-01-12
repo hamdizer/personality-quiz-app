@@ -1,4 +1,3 @@
-// pages/index.tsx
 import { useRouter } from "next/router";
 import Head from "next/head";
 import {
@@ -9,7 +8,6 @@ import {
   Grid,
   Card,
   CardContent,
-  Stack,
   Avatar,
 } from "@mui/material";
 import {
@@ -18,6 +16,7 @@ import {
   People as UsersIcon,
   AutoAwesome as SparklesIcon,
   ArrowForward as ArrowRightIcon,
+  Lightbulb as LightbulbIcon,
 } from "@mui/icons-material";
 
 export default function Home() {
@@ -47,6 +46,12 @@ export default function Home() {
       title: "Instant Results",
       description: "Get detailed insights and personalized results immediately",
       color: "#ec4899",
+    },
+    {
+      icon: <LightbulbIcon sx={{ fontSize: 32 }} />,
+      title: "Personalized Tips",
+      description: "Get personalized tips to grow and improve",
+      color: "#10b981",
     },
   ];
 
@@ -155,45 +160,54 @@ export default function Home() {
               Start Quiz Now
             </Button>
           </Box>
-
-          <Grid container spacing={4} sx={{ mt: 8 }}>
+          <Grid
+            container
+            spacing={4}
+            sx={{
+              mt: 8,
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gridTemplateRows: "repeat(2, 1fr)",
+            }}
+          >
             {features.map((feature, index) => (
-              <Grid item xs={12} md={4} key={index}>
-                <Card
-                  sx={{
-                    height: "100%",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-8px)",
-                      boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
-                    },
-                  }}
-                >
-                  <CardContent sx={{ textAlign: "center", p: 4 }}>
-                    <Avatar
-                      sx={{
-                        width: 64,
-                        height: 64,
-                        backgroundColor: `${feature.color}20`,
-                        color: feature.color,
-                        margin: "0 auto 16px",
-                      }}
-                    >
-                      {feature.icon}
-                    </Avatar>
-                    <Typography variant="h5" gutterBottom fontWeight={700}>
-                      {feature.title}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                      {feature.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
+              <Card
+                key={index}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    transform: "translateY(-8px)",
+                    boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
+                  },
+                }}
+              >
+                <CardContent sx={{ textAlign: "center", p: 4, flexGrow: 1 }}>
+                  <Avatar
+                    sx={{
+                      width: 64,
+                      height: 64,
+                      backgroundColor: `${feature.color}20`,
+                      color: feature.color,
+                      margin: "0 auto 16px",
+                    }}
+                  >
+                    {feature.icon}
+                  </Avatar>
+                  <Typography variant="h5" gutterBottom fontWeight={700}>
+                    {feature.title}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    {feature.description}
+                  </Typography>
+                </CardContent>
+              </Card>
             ))}
           </Grid>
         </Container>
-
         <Box sx={{ py: 8, backgroundColor: "rgba(255, 255, 255, 0.5)" }}>
           <Container maxWidth="lg">
             <Typography
@@ -208,28 +222,38 @@ export default function Home() {
               The 4 Personality Types
             </Typography>
 
-            <Grid container spacing={3}>
+            <Grid
+              container
+              spacing={3}
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gridTemplateRows: "repeat(2, 1fr)",
+              }}
+            >
               {personalityTypes.map((type, index) => (
-                <Grid item xs={12} md={6} key={index}>
-                  <Card
-                    sx={{
-                      borderLeft: `4px solid ${type.color}`,
-                      transition: "all 0.3s ease",
-                      "&:hover": {
-                        boxShadow: "0 15px 50px rgba(0, 0, 0, 0.12)",
-                      },
-                    }}
-                  >
-                    <CardContent sx={{ p: 4 }}>
-                      <Typography variant="h5" gutterBottom fontWeight={700}>
-                        {type.name}
-                      </Typography>
-                      <Typography variant="body1" color="text.secondary">
-                        {type.description}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
+                <Card
+                  key={index}
+                  sx={{
+                    borderLeft: `4px solid ${type.color}`,
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      boxShadow: "0 15px 50px rgba(0, 0, 0, 0.12)",
+                    },
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CardContent sx={{ p: 4 }}>
+                    <Typography variant="h5" gutterBottom fontWeight={700}>
+                      {type.name}
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary">
+                      {type.description}
+                    </Typography>
+                  </CardContent>
+                </Card>
               ))}
             </Grid>
           </Container>

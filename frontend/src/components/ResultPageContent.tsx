@@ -458,7 +458,6 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
   );
 };
 
-// Helper function to adjust color brightness
 function adjustColor(color: string, amount: number): string {
   const num = parseInt(color.replace("#", ""), 16);
   const r = Math.min(255, Math.max(0, (num >> 16) + amount));
