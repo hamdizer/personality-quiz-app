@@ -57,4 +57,4 @@ USER nestjs
 EXPOSE 5000
 
 # ✅ Run migrations → seed → start server
-CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma db seed && node dist/src/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]
