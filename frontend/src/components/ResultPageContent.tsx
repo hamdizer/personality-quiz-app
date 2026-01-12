@@ -34,7 +34,6 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
   const [animatedScores, setAnimatedScores] = useState<number[]>([]);
 
   useEffect(() => {
-    // Animate score bars
     const timer = setTimeout(() => {
       setAnimatedScores(scores.map((s) => s.percentage));
     }, 100);
@@ -52,7 +51,6 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
         })
         .catch((error) => console.log("Error sharing:", error));
     } else {
-      // Fallback: copy to clipboard
       navigator.clipboard.writeText(
         `I'm ${personality.name}! ${personality.description} - Take the quiz at ${window.location.origin}`
       );
@@ -71,7 +69,6 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
       }}
     >
       <Container maxWidth="lg">
-        {/* Result Card */}
         <Card
           sx={{
             overflow: "hidden",
@@ -79,7 +76,6 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
             borderRadius: 4,
           }}
         >
-          {/* Header Section */}
           <Box
             sx={{
               background: `linear-gradient(135deg, ${
@@ -91,7 +87,6 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
               overflow: "hidden",
             }}
           >
-            {/* Decorative circles */}
             <Box
               sx={{
                 position: "absolute",
@@ -159,9 +154,7 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
             </Box>
           </Box>
 
-          {/* Content Section */}
           <CardContent sx={{ p: { xs: 3, md: 6 } }}>
-            {/* Personality Breakdown */}
             <Box mb={6}>
               <Stack direction="row" alignItems="center" spacing={1.5} mb={4}>
                 <TrendingUpIcon sx={{ fontSize: 28, color: "primary.main" }} />
@@ -179,7 +172,7 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
               <Stack spacing={4}>
                 {scores.map((item, index) => (
                   <Box
-                    key={item.personality.id}
+                    key={item.personality.pubkey}
                     sx={{
                       "&:hover .personality-dot": {
                         transform: "scale(1.2)",
@@ -255,7 +248,6 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
                       </Stack>
                     </Stack>
 
-                    {/* Progress Bar */}
                     <Box
                       sx={{
                         width: "100%",
@@ -299,7 +291,6 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
                       />
                     </Box>
 
-                    {/* Description for top personality */}
                     {index === 0 && (
                       <Paper
                         elevation={0}
@@ -329,7 +320,6 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
               </Stack>
             </Box>
 
-            {/* Insights Section */}
             <Paper
               elevation={0}
               sx={{
@@ -398,7 +388,6 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
               </Stack>
             </Paper>
 
-            {/* Action Buttons */}
             <Stack
               direction={{ xs: "column", sm: "row" }}
               spacing={2}
@@ -459,7 +448,6 @@ const ResultPageContent: React.FC<ResultPageContentProps> = ({
           </CardContent>
         </Card>
 
-        {/* Additional Info */}
         <Box sx={{ mt: 4, textAlign: "center" }}>
           <Typography variant="body2" color="text.secondary">
             Results are based on your responses to 10 weighted questions

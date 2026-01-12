@@ -94,7 +94,6 @@ export default function Home() {
             "linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 50%, #DDD6FE 100%)",
         }}
       >
-        {/* Hero Section */}
         <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
           <Box textAlign="center" mb={8}>
             <Avatar
@@ -157,7 +156,6 @@ export default function Home() {
             </Button>
           </Box>
 
-          {/* Features */}
           <Grid container spacing={4} sx={{ mt: 8 }}>
             {features.map((feature, index) => (
               <Grid item xs={12} md={4} key={index}>
@@ -196,7 +194,6 @@ export default function Home() {
           </Grid>
         </Container>
 
-        {/* Personality Types */}
         <Box sx={{ py: 8, backgroundColor: "rgba(255, 255, 255, 0.5)" }}>
           <Container maxWidth="lg">
             <Typography
@@ -238,7 +235,6 @@ export default function Home() {
           </Container>
         </Box>
 
-        {/* Footer CTA */}
         <Container maxWidth="md" sx={{ py: 8 }}>
           <Card
             sx={{

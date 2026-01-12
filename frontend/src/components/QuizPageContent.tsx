@@ -36,6 +36,7 @@ const QuizPageContent: React.FC<QuizPageContentProps> = ({ onComplete }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [selectedOptionId, setSelectedOptionId] = useState("");
 
   useEffect(() => {
     loadQuestions();
@@ -64,10 +65,15 @@ const QuizPageContent: React.FC<QuizPageContentProps> = ({ onComplete }) => {
 
   const handleAnswer = (event: React.ChangeEvent<HTMLInputElement>) => {
     const optionId = event.target.value;
-    setAnswers({ ...answers, [questions[currentQuestion].pubkey]: optionId });
+    setSelectedOptionId(optionId);
   };
 
   const handleNext = () => {
+    setAnswers({
+      ...answers,
+      [questions[currentQuestion].pubkey]: selectedOptionId,
+    });
+
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     }
@@ -113,7 +119,7 @@ const QuizPageContent: React.FC<QuizPageContentProps> = ({ onComplete }) => {
 
   const question = questions[currentQuestion];
   const progress = ((currentQuestion + 1) / questions.length) * 100;
-  const isAnswered = answers[question.pubkey] !== undefined;
+  const isAnswered = selectedOptionId !== undefined;
   const isLastQuestion = currentQuestion === questions.length - 1;
   const allAnswered = Object.keys(answers).length === questions.length;
 
@@ -127,7 +133,6 @@ const QuizPageContent: React.FC<QuizPageContentProps> = ({ onComplete }) => {
       }}
     >
       <Container maxWidth="md">
-        {/* Header */}
         <Box textAlign="center" mb={4}>
           <Typography
             variant="h2"
@@ -148,9 +153,7 @@ const QuizPageContent: React.FC<QuizPageContentProps> = ({ onComplete }) => {
           </Typography>
         </Box>
 
-        {/* Quiz Card */}
         <Card sx={{ boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)" }}>
-          {/* Progress Bar */}
           <LinearProgress
             variant="determinate"
             value={progress}
@@ -164,7 +167,6 @@ const QuizPageContent: React.FC<QuizPageContentProps> = ({ onComplete }) => {
           />
 
           <CardContent sx={{ p: { xs: 3, md: 5 } }}>
-            {/* Question Header */}
             <Box mb={4}>
               <Stack direction="row" justifyContent="space-between" mb={2}>
                 <Chip
@@ -187,7 +189,6 @@ const QuizPageContent: React.FC<QuizPageContentProps> = ({ onComplete }) => {
               </Typography>
             </Box>
 
-            {/* Options */}
             <FormControl component="fieldset" fullWidth sx={{ mb: 4 }}>
               <RadioGroup
                 value={answers[question.pubkey] || ""}
@@ -200,11 +201,11 @@ const QuizPageContent: React.FC<QuizPageContentProps> = ({ onComplete }) => {
                       sx={{
                         border: 2,
                         borderColor:
-                          answers[question.pubkey] === option.pubkey
+                          selectedOptionId == option.pubkey
                             ? "primary.main"
                             : "grey.300",
                         backgroundColor:
-                          answers[question.pubkey] === option.pubkey
+                          selectedOptionId == option.pubkey
                             ? "primary.50"
                             : "white",
                         cursor: "pointer",
@@ -215,24 +216,21 @@ const QuizPageContent: React.FC<QuizPageContentProps> = ({ onComplete }) => {
                           transform: "scale(1.01)",
                         },
                       }}
-                      onClick={() =>
-                        setAnswers({
-                          ...answers,
-                          [question.pubkey]: option.pubkey,
-                        })
-                      }
+                      onClick={() => setSelectedOptionId(option.pubkey)}
                     >
                       <CardContent sx={{ p: 2.5 }}>
                         <FormControlLabel
                           value={option.pubkey}
-                          control={<Radio />}
+                          control={
+                            <Radio
+                              checked={selectedOptionId == option.pubkey}
+                            />
+                          }
                           label={
                             <Typography
                               variant="body1"
                               fontWeight={
-                                answers[question.pubkey] === option.pubkey
-                                  ? 600
-                                  : 400
+                                selectedOptionId === option.pubkey ? 600 : 400
                               }
                             >
                               {option.text}
@@ -247,14 +245,12 @@ const QuizPageContent: React.FC<QuizPageContentProps> = ({ onComplete }) => {
               </RadioGroup>
             </FormControl>
 
-            {/* Error Message */}
             {error && (
               <Alert severity="error" sx={{ mb: 3 }}>
                 {error}
               </Alert>
             )}
 
-            {/* Navigation Buttons */}
             <Stack direction="row" spacing={2}>
               <Button
                 variant="outlined"
@@ -312,7 +308,6 @@ const QuizPageContent: React.FC<QuizPageContentProps> = ({ onComplete }) => {
           </CardContent>
         </Card>
 
-        {/* Progress Indicator */}
         <Box textAlign="center" mt={3}>
           <Typography variant="body2" color="text.secondary">
             {Object.keys(answers).length} of {questions.length} questions

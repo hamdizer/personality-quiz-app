@@ -44,9 +44,6 @@ apiClient.interceptors.response.use(
 );
 
 export class QuizAPI {
-  /**
-   * Fetch all personalities
-   */
   static async getPersonalities(): Promise<Personality[]> {
     try {
       const response = await apiClient.get<Personality[]>("/api/personalities");
@@ -55,10 +52,6 @@ export class QuizAPI {
       throw this.handleError(error, "Failed to fetch personalities");
     }
   }
-
-  /**
-   * Fetch personality by ID
-   */
   static async getPersonalityById(pubkey: string): Promise<Personality> {
     try {
       const response = await apiClient.get<Personality>(
@@ -70,9 +63,6 @@ export class QuizAPI {
     }
   }
 
-  /**
-   * Fetch all questions with options
-   */
   static async getQuestions(): Promise<Question[]> {
     try {
       const response = await apiClient.get<Question[]>("/api/questions");
@@ -84,9 +74,6 @@ export class QuizAPI {
     }
   }
 
-  /**
-   * Fetch question by ID
-   */
   static async getQuestionById(pubkey: string): Promise<Question> {
     try {
       const response = await apiClient.get<Question>(
@@ -98,9 +85,6 @@ export class QuizAPI {
     }
   }
 
-  /**
-   * Submit quiz answers
-   */
   static async submitAnswers(data: SubmitAnswersRequest): Promise<Result> {
     try {
       const response = await apiClient.post<Result>("/api/quiz/submit", data);
@@ -110,9 +94,6 @@ export class QuizAPI {
     }
   }
 
-  /**
-   * Get quiz statistics
-   */
   static async getStatistics(): Promise<{
     totalQuestions: number;
     totalPersonalities: number;
@@ -126,9 +107,6 @@ export class QuizAPI {
     }
   }
 
-  /**
-   * Handle API errors
-   */
   private static handleError(error: unknown, defaultMessage: string): Error {
     console.log("Handling API error:", error);
     if (axios.isAxiosError(error)) {
